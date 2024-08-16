@@ -1,0 +1,64 @@
+---
+title: "Homework 1"
+author: "PSTAT 120C"
+output:
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(ggthemes)
+```
+
+## Problem 1
+```{r}
+ex1_y <- c(9, 14, 7, 29, 45, 109, 40, 238, 60, 170)
+ex1_x <- c(10, 12, 9, 27, 47, 112, 36, 241, 59, 167)
+
+lm(ex1_y ~ ex1_x)
+summary(lm(ex1_y ~ ex1_x))
+
+data <- tibble(ex1_x, ex1_y)
+
+ggplot(data, aes(ex1_x, ex1_y)) + geom_point(color = 'black') + 
+  geom_smooth(method = "lm", lty = 3, col = 'red', 
+              se = FALSE) +
+  theme_bw()
+
+s_xy <- sum( (ex1_x - mean(ex1_x))*(ex1_y - mean(ex1_y)) )
+s_xx <- sum( (ex1_x - mean(ex1_x))^2 )
+s_yy <- sum( (ex1_y - mean(ex1_y))^2 )
+
+b1 <- sum((ex1_x - mean(ex1_x)) * (ex1_y - mean(ex1_y))) / sum((ex1_x - mean(ex1_x))^2)
+b0 <- mean(ex1_y) - b1 * mean(ex1_x)
+
+b1_hat <- s_xy/s_xx
+b0_hat <- mean(ex1_y) - b1_hat*mean(ex1_x)
+y_hat <- b0 + b1 * ex1_x
+
+sse <- s_yy - b1_hat*s_xy
+sse
+# The SSE is ~56.85
+s <- sqrt(sse/(length(ex1_y) - 2))
+s_2 <- 1/(length(ex1_x)-2) * sum((ex1_y - y_hat)^2)
+s_2
+# The S^2 is ~7.11
+
+other <- sqrt(1/s_xx)
+t <- b1_hat/(s * other)
+
+qt(p = 0.025, df = 10)
+pt(t, df = 10, lower.tail = F) * 2
+
+# Expected change per one-unit change in book value: 0.9914
+
+0.7198+0.9914*100
+# Audit value for an item with book value of $100: ~$99.86
+```
