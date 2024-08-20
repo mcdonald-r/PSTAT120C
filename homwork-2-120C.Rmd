@@ -1,0 +1,39 @@
+---
+title: "Homework 2"
+author: "PSTAT 120C"
+output:
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Probelm 3
+```{r}
+data <- data.frame(
+  y = c(1, 0, 0, 1, 2, 3, 3),
+  x1 = c(-3, -2, -1, 0, 1, 2, 3),
+  x2 = c(5, 0, -3, -4, -3, 0, 5),
+  x3 = c(-1, 1, 1, 0, -1, -1, 1)
+)
+
+model <- lm(y ~ x1 + x2 + x3, data = data)
+model
+
+1.429 + (.5*1) + (.119*-3) + (-.5*-1)
+# The values are not the same as in row 5 of the table because the model is just a prediction and it is not 100% accurate.
+
+reduced_model <- lm(y ~ x1 + x2, data = data)
+reduced_model
+
+anova(reduced_model, model)
+
+qf(p=0.05, df1=1, df2=3, lower.tail = TRUE)
+# We fail to reject the hypothesis that x_3 contributes to the model.
+```
